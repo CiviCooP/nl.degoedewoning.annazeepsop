@@ -5,9 +5,9 @@
  */
 class CRM_Annazeepsop_Upgrader extends CRM_Annazeepsop_Upgrader_Base {
   public function install() {
-    $this->executeSqlFile('sql/createDgwBsn.sql');
+    $this->executeSqlFile('sql/createAnnaZeepsop.sql');
   }
   public function uninstall() {
-    $this->executeSqlFile('sql/dropDgwBsn.sql');
+    $this->executeSqlFile('sql/dropAnnaZeepsop.sql');
   }
 }

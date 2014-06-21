@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS dgw_bsn;
+DROP TABLE IF EXISTS dgw_suspects1;
+DROP TABLE IF EXISTS dgw_suspects2;
+DROP TABLE IF EXISTS dgw_suspects3;
