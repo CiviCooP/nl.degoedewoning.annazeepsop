@@ -28,7 +28,8 @@ function civicrm_api3_anna_zeepsop_getsuspects($params) {
      */
     $tableName = _set_table_name($params['rule_id']);
     if (!empty($tableName)) {
-      define('DGW_SUSPECT_TABLE', _set_table_name($param['rule_id']));
+      define('DGW_SUSPECT_TABLE', _set_table_name($params['rule_id']));
+      CRM_Core_DAO::executeQuery('TRUNCATE TABLE '.DGW_SUSPECT_TABLE);
       /*
        * get all possible dupes with rule
        */
@@ -79,7 +80,7 @@ function _write_suspect($contactIdA, $contactIdB, $score) {
     $paramCounter = 2;
     $contactA = civicrm_api3('Contact', 'Getsingle', array('id' => $contactIdA));
     $contactB = civicrm_api3('Contact', 'Getsingle', array('id' => $contactIdB));
-    setInsertFields($contactA, $contactB, $score, $insertFields, $insertParams, $paramCounter);
+    setInsertFields($contactA, $contactB, $insertFields, $insertParams, $paramCounter);
     if (!empty($insertFields)) {
       $query = 'INSERT INTO '.DGW_SUSPECT_TABLE.' SET '.implode(', ', $insertFields);
       CRM_Core_DAO::executeQuery($query, $insertParams);
@@ -91,7 +92,7 @@ function _write_suspect($contactIdA, $contactIdB, $score) {
  * 
  * @param array $contactA
  * @param array $contactB
- * @param string $bsn
+ * @param array $fields;
  * @return array $result;
  */
 function setInsertFields($contactA, $contactB, &$fields, &$params, &$counter) {
