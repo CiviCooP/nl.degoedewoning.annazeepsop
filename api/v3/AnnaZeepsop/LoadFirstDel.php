@@ -39,7 +39,7 @@ function civicrm_api3_anna_zeepsop_loadfirstdel($params) {
 function process_contact($data) {
   if (contact_exists($data[0]) == FALSE) {
     $insert = 'INSERT INTO dgw_first_deleted SET contact_id_first = %1, display_name_first '
-      .'= %2, gender_first = %3, birth_date_first = $%4, renter_first = %5, '
+      .'= %2, gender_first = %3, birth_date_first = %4, renter_first = %5, '
       .'main_renter_first = %6, start_date_first = %7, end_date_first = %8, ' 
       .'reason_first = %9';
     $params = array(
@@ -47,14 +47,27 @@ function process_contact($data) {
       2 => array($data[1].' '.$data[6], 'String'),
       3 => array($data[2], 'String'),
       4 => array(date('Ymd', strtotime($data[3])), 'Date'),
-      5 => array(get_first_code($data[4]), 'Positive'),
-      6 => array(get_first_code($data[5]), 'Positive'),
+      5 => array(transform_first_code($data[4]), 'Positive'),
+      6 => array(transform_first_code($data[5]), 'Positive'),
       7 => array(date('Ymd', strtotime($data[7])), 'Date'),
       8 => array(date('Ymd', strtotime($data[8])), 'Date'),
       9 => array($data[9], 'String')        
     );
     CRM_Core_DAO::executeQuery($insert, $params);
   }
+}
+/**
+ * Function to transfor J/j or any other value to tinyint
+ * @param string $first_code
+ * @return int $code_in_civicrm;
+ */
+function transform_first_code($first_code) {
+  if (strtolower($first_code) == 'j') {
+    $code_in_civicrm = 1;
+  } else {
+    $code_in_civicrm = 0;
+  }
+  return $code_in_civicrm;
 }
 /**
  * Function to check if the contact already exists in dgw_first_deleted
