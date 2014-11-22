@@ -6,16 +6,16 @@
 return array (
   0 => 
   array (
-    'name' => 'Cron:AnnaZeepsop.FirstDelete',
+    'name' => 'Cron:AnnaZeepsop.LoadFirstDel',
     'entity' => 'Job',
     'params' => 
     array (
       'version' => 3,
-      'name' => 'Call AnnaZeepsop.FirstDelete API',
-      'description' => 'Call AnnaZeepsop.FirstDelete API',
+      'name' => 'Call AnnaZeepsop.LoadFirstDel API',
+      'description' => 'Call AnnaZeepsop.LoadFirstDel API',
       'run_frequency' => 'Daily',
       'api_entity' => 'AnnaZeepsop',
-      'api_action' => 'FirstDelete',
+      'api_action' => 'LoadFirstDel',
       'parameters' => '',
       'is_active' => 0
     ),
