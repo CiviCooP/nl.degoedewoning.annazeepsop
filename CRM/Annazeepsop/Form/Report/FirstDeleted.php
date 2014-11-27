@@ -77,13 +77,14 @@ class CRM_Annazeepsop_Form_Report_FirstDeleted extends CRM_Report_Form {
   }
 
   function alterDisplay(&$rows) {
-    $entry_found = FALSE;
     foreach ($rows as $row_num => $row) {
+      $rows[$row_num]['birth_date_first'] = $this->alter_first_date($row['birth_date_first']);
+      $rows[$row_num]['start_date_first'] = $this->alter_first_date($row['start_date_first']);
+      $rows[$row_num]['end_date_first'] = $this->alter_first_date($row['end_date_first']);
       if (!empty($row['contact_id'])) {
         $url = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid='.$row['contact_id'], $this->_absoluteUrl);
         $rows[$row_num]['contact_id_link'] = $url;
         $rows[$row_num]['contact_id_hover'] = 'Klik om contactoverzicht te bekijken';
-        $entry_found = TRUE;
       }
       if ($row['renter_first'] == 1) {
         $rows[$row_num]['renter_first'] = 'J';
@@ -94,21 +95,14 @@ class CRM_Annazeepsop_Form_Report_FirstDeleted extends CRM_Report_Form {
         $rows[$row_num]['main_renter_first'] = 'J';
       } else {
         $rows[$row_num]['main_renter_first'] = 'N';
-      }
-      $rows[$row_num]['birth_date_first'] = $this->alter_date($row['birth_date_first']);
-      $rows[$row_num]['start_date_first'] = $this->alter_date($row['start_date_first']);
-      $rows[$row_num]['end_date_first'] = $this->alter_date($row['end_date_first']);
-      
+      }      
       if (empty($row['reason_civicrm'])) {
         $rows[$row_num]['reason_civicrm'] = 'Nog niet verwerkt';
-      }
-      if (!$entry_found) {
-        break;
       }
     }
   }
   
-  protected function alter_date($in_date) {
+  protected function alter_first_date($in_date) {
     CRM_Core_Error::debug('in_date', $in_date);
     $out_date = '';
     if (!empty($in_date) && $in_date != '1970-01-01') {
