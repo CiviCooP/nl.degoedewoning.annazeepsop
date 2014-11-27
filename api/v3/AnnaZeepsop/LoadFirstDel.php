@@ -37,24 +37,34 @@ function civicrm_api3_anna_zeepsop_loadfirstdel($params) {
  * @param type $data
  */
 function process_contact($data) {
-  if (contact_exists($data[0]) == FALSE) {
-    $insert = 'INSERT INTO dgw_first_deleted SET contact_id_first = %1, display_name_first '
-      .'= %2, gender_first = %3, birth_date_first = %4, renter_first = %5, '
-      .'main_renter_first = %6, start_date_first = %7, end_date_first = %8, ' 
-      .'reason_first = %9';
-    $params = array(
-      1 => array($data[0], 'Positive'),
-      2 => array($data[1].' '.$data[6], 'String'),
-      3 => array($data[2], 'String'),
-      4 => array(date('Ymd', strtotime($data[3])), 'Date'),
-      5 => array(transform_first_code($data[4]), 'Positive'),
-      6 => array(transform_first_code($data[5]), 'Positive'),
-      7 => array(date('Ymd', strtotime($data[7])), 'Date'),
-      8 => array(date('Ymd', strtotime($data[8])), 'Date'),
-      9 => array($data[9], 'String')        
-    );
-    CRM_Core_DAO::executeQuery($insert, $params);
+  if (!empty($data[0])) {
+    if (contact_exists($data[0]) == FALSE) {
+      $insert = 'INSERT INTO dgw_first_deleted SET contact_id_first = %1, display_name_first '
+        .'= %2, gender_first = %3, birth_date_first = %4, renter_first = %5, '
+        .'main_renter_first = %6, start_date_first = %7, end_date_first = %8, ' 
+        .'reason_first = %9';
+      $params = array(
+        1 => array($data[0], 'Positive'),
+        2 => array($data[1].' '.$data[6], 'String'),
+        3 => array($data[2], 'String'),
+        4 => array(alter_date($data[3]), 'Date'),
+        5 => array(transform_first_code($data[4]), 'Positive'),
+        6 => array(transform_first_code($data[5]), 'Positive'),
+        7 => array(alter_date($data[7]), 'Date'),
+        8 => array(alter_date($data[8]), 'Date'),
+        9 => array($data[9], 'String')        
+      );
+      CRM_Core_DAO::executeQuery($insert, $params);
+    }
   }
+}
+function alter_date($in_date) {
+  if (!empty($in_date)) {
+    $out_date = date('Ymd', strtotime($in_date));
+  } else {
+    $out_date = '';
+  }
+  return $out_date;
 }
 /**
  * Function to transfor J/j or any other value to tinyint
@@ -76,12 +86,14 @@ function transform_first_code($first_code) {
  * @return boolean
  */
 function contact_exists($contact_id_first) {
-  $query = 'SELECT COUNT(*) AS contact_count FROM dgw_first_deleted WHERE contact_id_first = %1';
-  $params = array(1 => array($contact_id_first, 'Positive'));
-  $dao = CRM_Core_DAO::executeQuery($query, $params);
-  if ($dao->fetch()) {
-    if ($dao->contact_count > 0) {
-      return TRUE;
+  if (is_numeric($contact_id_first)) {
+    $query = 'SELECT COUNT(*) AS contact_count FROM dgw_first_deleted WHERE contact_id_first = %1';
+    $params = array(1 => array($contact_id_first, 'Positive'));
+    $dao = CRM_Core_DAO::executeQuery($query, $params);
+    if ($dao->fetch()) {
+      if ($dao->contact_count > 0) {
+        return TRUE;
+      }
     }
   }
   return FALSE;
