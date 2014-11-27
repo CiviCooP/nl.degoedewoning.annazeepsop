@@ -95,15 +95,28 @@ class CRM_Annazeepsop_Form_Report_FirstDeleted extends CRM_Report_Form {
       } else {
         $rows[$row_num]['main_renter_first'] = 'N';
       }
+      $rows[$row_num]['birth_date_first'] = $this->alter_date($row['birth_date_first']);
+      $rows[$row_num]['start_date_first'] = $this->alter_date($row['start_date_first']);
+      $rows[$row_num]['end_date_first'] = $this->alter_date($row['end_date_first']);
+      
       if (empty($row['reason_civicrm'])) {
         $rows[$row_num]['reason_civicrm'] = 'Nog niet verwerkt';
       }
-
       if (!$entry_found) {
         break;
       }
     }
   }
+  
+  protected function alter_date($in_date) {
+    if (empty($in_date) || $in_date == '1970-01-01') {
+      $out_date = '';
+    } else {
+      $out_date = date('d-m-Y', strtotime($in_date));        
+    }
+    return $out_date;
+  }
+  
   protected function configure_report() {
     $this->_tagFilter = FALSE;
     $this->_groupFilter = FALSE;
