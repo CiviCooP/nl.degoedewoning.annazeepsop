@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `dgw_first_deleted` (
   `active_case` tinyint(4) DEFAULT 0,
   `active_group` tinyint(4) DEFAULT 0,
   `active_relation` tinyint(4) DEFAULT 0,
-  `reason_civicrm` varchar(128) DEFAULT NULL,
+  `reason_civicrm` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `contact_id_first_INDEX` (`contact_id_first`)

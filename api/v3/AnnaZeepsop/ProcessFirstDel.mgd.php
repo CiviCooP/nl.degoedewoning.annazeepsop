@@ -11,8 +11,8 @@ return array (
     'params' => 
     array (
       'version' => 3,
-      'name' => 'Call AnnaZeepsop.ProcessFirstDel API',
-      'description' => 'Call AnnaZeepsop.ProcessFirstDel API',
+      'name' => 'Verwijderde personen First verwerken',
+      'description' => 'Verwijderde personen uit First verwerken in CiviCRM',
       'run_frequency' => 'Daily',
       'api_entity' => 'AnnaZeepsop',
       'api_action' => 'ProcessFirstDel',

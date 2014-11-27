@@ -11,8 +11,8 @@ return array (
     'params' => 
     array (
       'version' => 3,
-      'name' => 'Call AnnaZeepsop.LoadFirstDel API',
-      'description' => 'Call AnnaZeepsop.LoadFirstDel API',
+      'name' => 'Verwijderde personen First laden',
+      'description' => 'Verwijderde personen uit First laden in tussenbestand',
       'run_frequency' => 'Daily',
       'api_entity' => 'AnnaZeepsop',
       'api_action' => 'LoadFirstDel',

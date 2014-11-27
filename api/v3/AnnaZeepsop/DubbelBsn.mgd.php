@@ -11,8 +11,8 @@ return array (
     'params' => 
     array (
       'version' => 3,
-      'name' => 'Call AnnaZeepsop.DubbelBsn API',
-      'description' => 'Call AnnaZeepsop.DubbelBsn API',
+      'name' => 'Dubbel BSN bestand opbouwen',
+      'description' => 'Dubbel BSN bestand voor Anna Zeepsop opbouwen',
       'run_frequency' => 'Daily',
       'api_entity' => 'AnnaZeepsop',
       'api_action' => 'DubbelBsn',
