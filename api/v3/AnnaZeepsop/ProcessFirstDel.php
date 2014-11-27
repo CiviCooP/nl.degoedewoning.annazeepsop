@@ -12,6 +12,7 @@
  * @see civicrm_api3_create_error
  * @throws API_Exception
  */
+set_time_limit(0);
 function civicrm_api3_anna_zeepsop_processfirstdel($params) {
   $custom_id = get_custom_field_persoonsnummer_first();
   define('PERSOONSNUMMER_CUSTOM_ID', $custom_id);
