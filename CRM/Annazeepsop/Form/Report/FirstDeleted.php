@@ -109,9 +109,8 @@ class CRM_Annazeepsop_Form_Report_FirstDeleted extends CRM_Report_Form {
   }
   
   protected function alter_date($in_date) {
-    if (empty($in_date) || $in_date == '1970-01-01') {
-      $out_date = '';
-    } else {
+    $out_date = '';
+    if (!empty($in_date) && $in_date != '1970-01-01') {
       $out_date = date('d-m-Y', strtotime($in_date));        
     }
     return $out_date;
