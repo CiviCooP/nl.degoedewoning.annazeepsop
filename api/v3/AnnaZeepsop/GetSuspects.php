@@ -83,7 +83,7 @@ function _write_suspect($contactIdA, $contactIdB, $score) {
     setInsertFields($contactA, $contactB, $insertFields, $insertParams, $paramCounter);
     if (!empty($insertFields)) {
       $query = 'INSERT INTO '.DGW_SUSPECT_TABLE.' SET '.implode(', ', $insertFields);
-      CRM_Core_DAO::executeQuery($query, $insertParams);
+      $result = CRM_Core_DAO::executeQuery($query, $insertParams);
     }
   }
 }
@@ -103,12 +103,16 @@ function setInsertFields($contactA, $contactB, &$fields, &$params, &$counter) {
   foreach ($queryFields as $fieldName => $type) {
     $valueA = $contactA[$fieldName];
     $valueB = $contactB[$fieldName];
-    $fields[] = $fieldName.'_1 = %'.$counter;
-    $params[$counter] = setInsertParam($valueA, $type);
-    $counter++;
-    $fields[] = $fieldName.'_2 = %'.$counter;
-    $params[$counter]= setInsertParam($valueB, $type);
-    $counter++;
+    if (!empty($valueA)) {
+      $fields[] = $fieldName . '_1 = %' . $counter;
+      $params[$counter] = setInsertParam($valueA, $type);
+      $counter++;
+    }
+    if (!empty($valueB)) {
+      $fields[] = $fieldName . '_2 = %' . $counter;
+      $params[$counter] = setInsertParam($valueB, $type);
+      $counter++;
+    }
   }
 }
 /**
