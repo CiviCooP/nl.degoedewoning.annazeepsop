@@ -22,6 +22,7 @@ function _civicrm_api3_anna_zeepsop_getsuspects_spec(&$spec) {
  * @throws API_Exception
  */
 function civicrm_api3_anna_zeepsop_getsuspects($params) {
+  set_time_limit(0);
   if (array_key_exists('rule_id', $params)) {
     /*
      * set table based on rule_id
