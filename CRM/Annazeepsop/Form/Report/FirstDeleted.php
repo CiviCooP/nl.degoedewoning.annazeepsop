@@ -5,8 +5,8 @@ class CRM_Annazeepsop_Form_Report_FirstDeleted extends CRM_Report_Form {
   protected $_customGroupGroupBy = FALSE; 
   
   function __construct() {
-    $this->configure_report();
-    $this->set_columns();
+    $this->configureReport();
+    $this->setColumns();
     parent::__construct();
   }
 
@@ -78,9 +78,9 @@ class CRM_Annazeepsop_Form_Report_FirstDeleted extends CRM_Report_Form {
 
   function alterDisplay(&$rows) {
     foreach ($rows as $row_num => $row) {
-      $rows[$row_num]['birth_date_first'] = $this->alter_first_date($row['birth_date_first']);
-      $rows[$row_num]['start_date_first'] = $this->alter_first_date($row['start_date_first']);
-      $rows[$row_num]['end_date_first'] = $this->alter_first_date($row['end_date_first']);
+      $rows[$row_num]['birth_date_first'] = $this->alterFirstDate($row['birth_date_first']);
+      $rows[$row_num]['start_date_first'] = $this->alterFirstDate($row['start_date_first']);
+      $rows[$row_num]['end_date_first'] = $this->alterFirstDate($row['end_date_first']);
       if (!empty($row['contact_id'])) {
         $url = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid='.$row['contact_id'], $this->_absoluteUrl);
         $rows[$row_num]['contact_id_link'] = $url;
@@ -102,7 +102,7 @@ class CRM_Annazeepsop_Form_Report_FirstDeleted extends CRM_Report_Form {
     }
   }
   
-  protected function alter_first_date($in_date) {
+  protected function alterFirstDate($in_date) {
     $out_date = '';
     if (!empty($in_date) && $in_date != '1970-01-01') {
       $out_date = date('d-m-Y', strtotime($in_date));        
@@ -110,7 +110,7 @@ class CRM_Annazeepsop_Form_Report_FirstDeleted extends CRM_Report_Form {
     return $out_date;
   }
   
-  protected function configure_report() {
+  protected function configureReport() {
     $this->_tagFilter = FALSE;
     $this->_groupFilter = FALSE;
     $this->_exposeContactID = FALSE;
@@ -118,7 +118,7 @@ class CRM_Annazeepsop_Form_Report_FirstDeleted extends CRM_Report_Form {
     $this->_add2groupSupported = FALSE;
   }
   
-  protected function set_columns() {
+  protected function setColumns() {
     $this->_columns = array();
   }
 }
