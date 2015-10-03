@@ -16,27 +16,27 @@
  */
 function civicrm_api3_anna_zeepsop_loadfirstdel($params) {
   set_time_limit(0);
-  $count_transferred = 0;
-  $source_file = get_source_file();
-  $csv_separator = check_separator($source_file);
-  $sf = fopen($source_file, 'r');
+  $countTransferred = 0;
+  $sourceFile = _getSourceFile();
+  $csvSeparator = _checkSeparator($sourceFile);
+  $sf = fopen($sourceFile, 'r');
   while (!feof($sf)) {
-    $source_data = fgetcsv($sf, 0, $csv_separator);
-    process_contact($source_data);
-    $count_transferred++;
+    $sourceData = fgetcsv($sf, 0, $csvSeparator);
+    _processContact($sourceData);
+    $countTransferred++;
   }
   fclose($sf);
-  unlink($source_file);
-  $return_values = 'Verwijderde First Personen in CiviCRM geladen, '.$count_transferred.
+  unlink($sourceFile);
+  $returnValues = 'Verwijderde First Personen in CiviCRM geladen, '.$countTransferred.
     ' personen geladen.';
-  return civicrm_api3_create_success($return_values, $params, 'AnnaZeepsop', 'LoadFirstDel');
+  return civicrm_api3_create_success($returnValues, $params, 'AnnaZeepsop', 'LoadFirstDel');
 }
 /**
  * Function to add a contact to table dgw_first_deleted (if not exists)
  * 
- * @param type $data
+ * @param array $data
  */
-function process_contact($data) {
+function _processContact($data) {
   if (!empty($data[0])) {
     if (contact_exists($data[0]) == FALSE) {
       $insert = 'INSERT INTO dgw_first_deleted SET contact_id_first = %1, display_name_first '
@@ -47,51 +47,51 @@ function process_contact($data) {
         1 => array($data[0], 'Positive'),
         2 => array($data[1].' '.$data[6], 'String'),
         3 => array($data[2], 'String'),
-        4 => array(alter_date($data[3]), 'Date'),
-        5 => array(transform_first_code($data[4]), 'Positive'),
-        6 => array(transform_first_code($data[5]), 'Positive'),
-        7 => array(alter_date($data[7]), 'Date'),
-        8 => array(alter_date($data[8]), 'Date'),
+        4 => array(_alterDate($data[3]), 'Date'),
+        5 => array(_transformFirstCode($data[4]), 'Positive'),
+        6 => array(_transformFirstCode($data[5]), 'Positive'),
+        7 => array(_alterDate($data[7]), 'Date'),
+        8 => array(_alterDate($data[8]), 'Date'),
         9 => array($data[9], 'String')        
       );
       CRM_Core_DAO::executeQuery($insert, $params);
     }
   }
 }
-function alter_date($in_date) {
-  if (!empty($in_date)) {
-    $out_date = date('Ymd', strtotime($in_date));
+function _alterDate($inDate) {
+  if (!empty($inDate)) {
+    $outDate = date('Ymd', strtotime($inDate));
   } else {
-    $out_date = '';
+    $outDate = '';
   }
-  return $out_date;
+  return $outDate;
 }
 /**
- * Function to transfor J/j or any other value to tinyint
+ * Function to transform J/j or any other value to tinyint
  * @param string $first_code
  * @return int $code_in_civicrm;
  */
-function transform_first_code($first_code) {
-  if (strtolower($first_code) == 'j') {
-    $code_in_civicrm = 1;
+function _transformFirstCode($firstCode) {
+  if (strtolower($firstCode) == 'j') {
+    $codeInCivicrm = 1;
   } else {
-    $code_in_civicrm = 0;
+    $codeInCivicrm = 0;
   }
-  return $code_in_civicrm;
+  return $codeInCivicrm;
 }
 /**
  * Function to check if the contact already exists in dgw_first_deleted
  * 
- * @param int $contact_id_first
+ * @param int $contactIdFirst
  * @return boolean
  */
-function contact_exists($contact_id_first) {
-  if (is_numeric($contact_id_first)) {
-    $query = 'SELECT COUNT(*) AS contact_count FROM dgw_first_deleted WHERE contact_id_first = %1';
-    $params = array(1 => array($contact_id_first, 'Positive'));
+function _contactExists($contactIdFirst) {
+  if (is_numeric($contactIdFirst)) {
+    $query = 'SELECT COUNT(*) AS contactCount FROM dgw_first_deleted WHERE contact_id_first = %1';
+    $params = array(1 => array($contactIdFirst, 'Positive'));
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     if ($dao->fetch()) {
-      if ($dao->contact_count > 0) {
+      if ($dao->contactCount > 0) {
         return TRUE;
       }
     }
@@ -104,12 +104,12 @@ function contact_exists($contact_id_first) {
  * @return string
  * @throws API_Exception when source_file not found
  */
-function get_source_file() {
-  $source_file = CRM_Utils_DgwUtils::getDgwConfigValue('kov bestandsnaam').'first_deleted.csv';
-  if (!file_exists($source_file)) {
-    throw new API_Exception("Bronbestand $source_file niet gevonden, verwerken Verwijderde First Personen mislukt");
+function _getSourceFile() {
+  $sourceFile = CRM_Utils_DgwUtils::getDgwConfigValue('kov bestandsnaam').'first_deleted.csv';
+  if (!file_exists($sourceFile)) {
+    throw new API_Exception("Bronbestand $sourceFile niet gevonden, verwerken Verwijderde First Personen mislukt");
   }
-  return $source_file;
+  return $sourceFile;
 }
 /**
  * Function to check which csv separator to use. Assumption is that
@@ -119,19 +119,19 @@ function get_source_file() {
  * @param string $source_file
  * @return string $csv_separator
  */
-function check_separator($source_file) {
-  $test_separator = fopen($source_file, 'r');
+function _checkSeparator($sourceFile) {
+  $testSeparator = fopen($sourceFile, 'r');
   /*
    * first test if semi-colon or comma separated, based on assumption that
    * it is semi-colon and it should be comma if I only get one record then
    */
-  if ($test_row = fgetcsv($test_separator, 0, ';')) {
-    if (!isset($test_row[1])) {
-      $csv_separator = ",";
+  if ($testRow = fgetcsv($testSeparator, 0, ';')) {
+    if (!isset($testRow[1])) {
+      $csvSeparator = ",";
     } else {
-      $csv_separator = ";";
+      $csvSeparator = ";";
     }
   }
-  fclose($test_separator);
-  return $csv_separator;  
+  fclose($testSeparator);
+  return $csvSeparator;
 }
