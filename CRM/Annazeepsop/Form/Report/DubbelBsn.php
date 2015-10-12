@@ -45,13 +45,13 @@ class CRM_Annazeepsop_Form_Report_DubbelBsn extends CRM_Report_Form {
       // make count columns point to detail report
       // convert name to links
       if (array_key_exists('contact_id_1', $row)) {
-        $url = CRM_Utils_System::url('ciivcrm/contact/view', 'reset=1&cid='.$row['contact_id_1']);
+        $url = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid='.$row['contact_id_1']);
         $rows[$rowNum]['contact_id_1_link' ] = $url;
         $rows[$rowNum]['contact_id_1_hover'] = ts("Gegevens contact 1");
         $entryFound = true;
       }
       if ( array_key_exists( 'contact_id_2', $row ) ) {
-        $url = CRM_Utils_System::url('ciivcrm/contact/view', 'reset=1&cid='.$row['contact_id_2']);
+        $url = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid='.$row['contact_id_2']);
         $rows[$rowNum]['contact_id_2_link' ] = $url;
         $rows[$rowNum]['contact_id_2_hover'] = ts("Gegevens contact 2");
         $entryFound = true;
