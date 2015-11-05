@@ -38,7 +38,7 @@ function civicrm_api3_anna_zeepsop_loadfirstdel($params) {
  */
 function _processContact($data) {
   if (!empty($data[0])) {
-    if (contact_exists($data[0]) == FALSE) {
+    if (contactExists($data[0]) == FALSE) {
       $insert = 'INSERT INTO dgw_first_deleted SET contact_id_first = %1, display_name_first '
         .'= %2, gender_first = %3, birth_date_first = %4, renter_first = %5, '
         .'main_renter_first = %6, start_date_first = %7, end_date_first = %8, ' 
