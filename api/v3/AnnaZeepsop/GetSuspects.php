@@ -27,16 +27,16 @@ function civicrm_api3_anna_zeepsop_getsuspects($params) {
     /*
      * set table based on rule_id
      */
-    $tableName = _set_table_name($params['rule_id']);
+    $tableName = _setTableName($params['rule_id']);
     if (!empty($tableName)) {
-      define('DGW_SUSPECT_TABLE', _set_table_name($params['rule_id']));
+      define('DGW_SUSPECT_TABLE', _setTableName($params['rule_id']));
       CRM_Core_DAO::executeQuery('TRUNCATE TABLE '.DGW_SUSPECT_TABLE);
       /*
        * get all possible dupes with rule
        */
       $dupes = CRM_Dedupe_Finder::dupes($params['rule_id']);
       foreach ($dupes as $dupe) {
-        _write_suspect($dupe[0], $dupe[1], $dupe[2]);
+        _writeSuspect($dupe[0], $dupe[1], $dupe[2]);
       }
       $returnValues = array('is_error' => 0, 'message' => 'Verwerking succesvol afgerond');
       return civicrm_api3_create_success($returnValues, $params, 'AnnaZeepsop', 'GetSuspects');
@@ -50,7 +50,7 @@ function civicrm_api3_anna_zeepsop_getsuspects($params) {
 /**
  * Function to get table name
  */
-function _set_table_name($ruleId) {
+function _setTableName($ruleId) {
   $tableName = '';
   switch ($ruleId) {
     case 7:
@@ -72,7 +72,7 @@ function _set_table_name($ruleId) {
  * @param int $contactIdB
  * @param int $score
  */
-function _write_suspect($contactIdA, $contactIdB, $score) {
+function _writeSuspect($contactIdA, $contactIdB, $score) {
   $insertFields = array();
   $insertParams = array();
   if (!empty($contactIdA) && !empty($contactIdB)) {
@@ -81,10 +81,12 @@ function _write_suspect($contactIdA, $contactIdB, $score) {
     $paramCounter = 2;
     $contactA = civicrm_api3('Contact', 'Getsingle', array('id' => $contactIdA));
     $contactB = civicrm_api3('Contact', 'Getsingle', array('id' => $contactIdB));
-    setInsertFields($contactA, $contactB, $insertFields, $insertParams, $paramCounter);
-    if (!empty($insertFields)) {
-      $query = 'INSERT INTO '.DGW_SUSPECT_TABLE.' SET '.implode(', ', $insertFields);
-      $result = CRM_Core_DAO::executeQuery($query, $insertParams);
+    if ($contactA['is_deleted'] == 0 && $contactB['is_deleted'] == 0) {
+      setInsertFields($contactA, $contactB, $insertFields, $insertParams, $paramCounter);
+      if (!empty($insertFields)) {
+        $query = 'INSERT INTO ' . DGW_SUSPECT_TABLE . ' SET ' . implode(', ', $insertFields);
+        $result = CRM_Core_DAO::executeQuery($query, $insertParams);
+      }
     }
   }
 }
@@ -128,9 +130,9 @@ function setFieldLine($column, $counter) {
   return $line;
 }
 /**
- * Funciton to create a param value for insert
+ * Function to create a param value for insert
  * 
- * @param type $value
+ * @param mixed $value
  * @param string $type
  * @return array
  */

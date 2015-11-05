@@ -30,11 +30,13 @@ class CRM_Annazeepsop_Form_Report_Suspects1 extends CRM_Report_Form {
   }
 
   function from() {
-    $this->_from = "FROM dgw_suspects1";
+    $this->_from = "FROM dgw_suspects1 suspects
+      INNER JOIN civicrm_contact contact1 ON contact1.id = suspects.contact_id_1
+      INNER JOIN civicrm_contact contact2 ON contact2.id = suspects.contact_id_2";
   }
 
   function where() {
-    $this->_where = "";
+    $this->_where = "WHERE contact1.is_deleted = 0 AND contact2.is_deleted = 0";
   }
 
   function postProcess() {
