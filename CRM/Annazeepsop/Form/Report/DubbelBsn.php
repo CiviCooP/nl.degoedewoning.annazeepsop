@@ -10,11 +10,26 @@ class CRM_Annazeepsop_Form_Report_DubbelBsn extends CRM_Report_Form {
     parent::preProcess();
   }
   
+  
+  function select() {
+    $this->_select = "SELECT * ";
+  }
+
+  function from() {
+    $this->_from = "FROM dgw_bsn bsn
+      INNER JOIN civicrm_contact contact1 ON contact1.id = bsn.contact_id_1
+      INNER JOIN civicrm_contact contact2 ON contact2.id = bsn.contact_id_2";
+  }
+
+  function where() {
+    $this->_where = "WHERE contact1.is_deleted = 0 AND contact2.is_deleted = 0";
+  }
+  
   function postProcess() {
 		$this->beginPostProcess();
-
-		$bsnQry = 'SELECT * FROM dgw_bsn';
-    $this->_columnHeaders = array(
+        
+        $sql = $this->buildQuery(TRUE);
+        $this->_columnHeaders = array(
 			'contact_id_1' => array('title' => 'ID Contact 1'),
       'display_name_1' => array('title' => 'Naam'),
       'bsn_1'	=> array('title' => 'BSN'),
@@ -24,7 +39,7 @@ class CRM_Annazeepsop_Form_Report_DubbelBsn extends CRM_Report_Form {
       'phone_1' => array('title' => 'Telefoon'),
       'email_1' => array('title' => 'Emailadres'),
       'birth_date_1' => array('title' => 'Geb. dat.'),
-			'contact_id_2' => array('title' => 'ID Contact 2'),
+        'contact_id_2' => array('title' => 'ID Contact 2'),
       'display_name_2' => array('title' => 'Naam'),
       'bsn_2'	=> array('title' => 'BSN'),
       'street_address_2' => array('title' => 'Adres'),
@@ -34,11 +49,12 @@ class CRM_Annazeepsop_Form_Report_DubbelBsn extends CRM_Report_Form {
       'email_2' => array('title' => 'Emailadres'),
       'birth_date_2' => array('title' => 'Geb. dat.'),);
                        
-    $this->buildRows ($bsnQry, $rows);
-		$this->alterDisplay($rows);
+    $this->buildRows ($sql, $rows);
+    $this->alterDisplay($rows);
     $this->doTemplateAssignment($rows);
     $this->endPostProcess($rows);    
-	}
+  }
+  
   function alterDisplay(&$rows) {
     $entryFound = false;
     foreach ($rows as $rowNum => $row) {
