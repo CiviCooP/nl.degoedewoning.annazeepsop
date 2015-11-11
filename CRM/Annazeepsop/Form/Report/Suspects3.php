@@ -30,7 +30,7 @@ class CRM_Annazeepsop_Form_Report_Suspects3 extends CRM_Report_Form {
   }
 
   function from() {
-    $this->_from = "FROM dgw_suspects3git statu suspects
+    $this->_from = "FROM dgw_suspects3 suspects
       INNER JOIN civicrm_contact contact1 ON contact1.id = suspects.contact_id_1
       INNER JOIN civicrm_contact contact2 ON contact2.id = suspects.contact_id_2";
   }

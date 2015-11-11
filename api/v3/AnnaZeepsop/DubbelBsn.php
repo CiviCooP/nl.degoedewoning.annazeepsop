@@ -66,10 +66,12 @@ function writeDoubleBsn($contactIdA, $contactIdB, $bsn) {
     $paramCounter = 3;
     $contactA = civicrm_api3('Contact', 'Getsingle', array('id' => $contactIdA));
     $contactB = civicrm_api3('Contact', 'Getsingle', array('id' => $contactIdB));
-    setInsertFields($contactA, $contactB, $insertFields, $insertParams, $paramCounter);
-    if (!empty($insertFields)) {
-      $query = 'INSERT INTO dgw_bsn SET '.implode(', ', $insertFields);
-      CRM_Core_DAO::executeQuery($query, $insertParams);
+    if ($contactA['contact_is_deleted'] == 0 && $contactB['contact_is_deleted'] == 0) {
+      setInsertFields($contactA, $contactB, $insertFields, $insertParams, $paramCounter);
+      if (!empty($insertFields)) {
+        $query = 'INSERT INTO dgw_bsn SET '.implode(', ', $insertFields);
+        CRM_Core_DAO::executeQuery($query, $insertParams);
+      }
     }
   }
 }
