@@ -11,7 +11,7 @@ return array (
     'params' => 
     array (
       'version' => 3,
-      'label' => 'FirstDeleted',
+      'label' => 'Beëindigde Personen uit First',
       'description' => 'FirstDeleted (nl.degoedewoning.annazeepsop)',
       'class_name' => 'CRM_Annazeepsop_Form_Report_FirstDeleted',
       'report_url' => 'firstdeleted',
